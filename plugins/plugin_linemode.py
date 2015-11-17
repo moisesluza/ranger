@@ -5,6 +5,10 @@ from ranger.ext.human_readable import human_readable
 
 @ranger.api.register_linemode
 class FileAttrLinemode(LinemodeBase):
+    """Defines a new line mode showing file name and all its attributes similar to the results of ls -l
+
+        To enable this linemode as default in ranger add 'default_linemode fileattr' to rc.conf
+    """
     name = "fileattr"
     timeformat = '%Y-%m-%d %H:%M'
 
