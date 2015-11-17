@@ -22,7 +22,6 @@ def dehumanize(size):
     eq = {'K': 1024, 'M':1024 ** 2, 'G':1024 ** 3}
     value, unit = size[0:-1], size[-1].upper()
     if not value.isdigit: return 0
-    ranger.log("dehumanize ", value, unit)
     return float(value) * eq[unit]
 
 class filterby(Command):
@@ -86,15 +85,12 @@ class filterby(Command):
         parsed_args = self.parse_args(self.args)
         files = self.fm.thisdir.files
 
-        ranger.log("parsed_args: ", parsed_args)
         filters = self.build_filters(parsed_args)
 
         self.fm.thisdir.files = [f for f in files if f.is_file and accept_file(f, filters)]
-        ranger.log("files: ", [f.relative_path for f in self.fm.thisdir.files])
         
         if self.fm.thisdir.files:
             self.fm.thisdir.pointed_obj = self.fm.thisdir.files[0]
-            ranger.log("pointed_obj: " , self.fm.thisdir.pointed_obj.relative_path)
             self.fm.thisdir.move_to_obj(self.fm.thisdir.pointed_obj)
 
     def parse_args(self, arguments):
@@ -115,7 +111,6 @@ class filterby(Command):
         res_dict = {}
         for key, value in self.ARG_RE.iteritems():
             for arg in arguments:
-                ranger.log(arg)
                 if arg.startswith(key):
                     match = value['re'].match(arg)
                     if match:
@@ -131,7 +126,6 @@ class filterby(Command):
         filters = []
         for attr, value in parsed_args.iteritems():
             operator = value['operator']
-            ranger.log("values----",attr,value)
 
             fsobj_attr = self.TRANSLATE_ATTR.get(attr, attr)
             cond = self.COND_BUILDER[attr]
@@ -139,7 +133,6 @@ class filterby(Command):
                 operator = self.CONVERT_OPERATOR[attr].get(operator, operator)
 
             cond = cond.format(attr=fsobj_attr,operator=operator,value=value['value'])
-            ranger.log("cond : ", cond)
             filters.append(lambda file: eval(cond))
         return filters
 
